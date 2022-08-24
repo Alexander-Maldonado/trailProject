@@ -15,13 +15,18 @@ const UserSchema = new mongoose.Schema({
 
         email: {
             type:String,
-            required:[true,"An email is required"]
+            // required:[true,"An email is required"]
         },
 
         password:{
             type:String,
-            required:[true,"A password is required"]
-        }
+            // required:[true,"A password is required"]
+        },
+
+        confirmPassword:{
+            type:String,
+            // required:[true, "Please re-enter password"]
+        },
 
     }, {timestamps:true}
 )
@@ -29,4 +34,4 @@ const UserSchema = new mongoose.Schema({
 
 
 
-module.exports = mongoose.model("user", UserSchema)
+module.exports = mongoose.model("User", UserSchema)

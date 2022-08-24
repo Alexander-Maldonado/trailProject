@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 
 const TrailsSchema = new mongoose.Schema(
     {
-        personName:{
+        trailUser:{
             type:String,
             required:[true,"A name is required"]
         },
@@ -23,6 +23,15 @@ const TrailsSchema = new mongoose.Schema(
         zipCode:{
             type:Number
         },
+
+        complete:{
+            type:String
+        },
+
+        date:{
+            type:Date
+        },
+        
     }, {timestamps:true}
 )
 

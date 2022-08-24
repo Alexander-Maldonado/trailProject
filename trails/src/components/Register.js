@@ -1,34 +1,34 @@
-// import axios from 'axios';
-// import { useState } from 'react';
-import { Link } from "react-router-dom";
+import axios from 'axios';
+import { useState } from 'react';
+import { Link, useNavigate } from "react-router-dom";
 
 const Register= (props) =>{
-    // const [firstName, setFirstName]= useState('');
-    // const [lastName, setLastName]= useState('');
-    // const [emai, setEmail]= useState('');
-    // const [password, setPassword]= useState('');
-    // const [confirmPassword, setConfirmPassword]= useState('');
-    // const [age, setAge]= useState('');
-    // const navigate = useNavigate();
+    const [firstName, setFirstName]= useState('');
+    const [lastName, setLastName]= useState('');
+    const [email, setEmail]= useState('');
+    const [password, setPassword]= useState('');
+    const [confirmPassword, setConfirmPassword]= useState('');
+    const [age, setAge]= useState('');
+    const navigate = useNavigate();
 
-    // const submitForm = (e)=>{
-    //     e.preventDefault();
-    //     axios.post(`http://localhost:8000/api/`,{firstName,lastName,emai,password,confirmPassword,age})
-    //     .then((res)=>{
-    //         console.log(res);
-    //         console.log(res.data);
-    //         navigate('/');
-    //         setFirstName('');
-    //         setLastName('');
-    //         setEmail('');
-    //         setPassword('');
-    //         setConfirmPassword('');
-    //         setAge('');
-    //     })
-    //     .catch(err=>{
-    //         console.log(err)
-    //     })
-    // }
+    const submitForm = (e)=>{
+        e.preventDefault();
+        axios.post(`http://localhost:8000/api/trails/user`,{firstName,lastName,email,password,confirmPassword,age})
+        .then((res)=>{
+            console.log(res);
+            console.log(res.data);
+            navigate('/');
+            setFirstName('');
+            setLastName('');
+            setEmail('');
+            setPassword('');
+            setConfirmPassword('');
+            setAge('');
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+    }
 
     return(
         <div className="container">
@@ -39,11 +39,12 @@ const Register= (props) =>{
                 <Link to={'/'}>Return to Log In</Link>
             </div>
             <div className="register">
-                <form className="info">
+                <form className="info" onSubmit={submitForm}>
                     <div className="input">
                         <label>First Name: </label>
                         <input
-                        //value={}
+                        onChange={(e)=>setFirstName(e.target.value)}
+                        value={firstName}
                         name='First Name'
                         type='text'
                         />
@@ -51,15 +52,17 @@ const Register= (props) =>{
                     <div className="input">
                         <label>Last Name: </label>
                         <input
-                        //value={}
+                        onChange={(e)=>setLastName(e.target.value)}
+                        value={lastName}
                         name='Last Name'
                         type='text'
                         />
                     </div>
                     <div className="input">
-                        <label>Age: </label>
+                        <label>DOB: </label>
                         <input
-                        //value={}
+                        onChange={(e)=>setAge(e.target.value)}
+                        value={age}
                         name='age'
                         type='date'
                         />
@@ -67,7 +70,8 @@ const Register= (props) =>{
                     <div className="input">
                         <label>Email: </label>
                         <input
-                        //value={}
+                        onChange={(e)=>setEmail(e.target.value)}
+                        value={email}
                         name='email'
                         type='text'
                         />
@@ -75,7 +79,8 @@ const Register= (props) =>{
                     <div className="input">
                         <label>Password: </label>
                         <input
-                        //value={}
+                        onChange={(e)=>setPassword(e.target.value)}
+                        value={password}
                         name='password'
                         type='password'
                         />
@@ -83,7 +88,8 @@ const Register= (props) =>{
                     <div className="input">
                         <label>Confirm Password: </label>
                         <input
-                        //value={}
+                        onChange={(e)=>setConfirmPassword(e.target.value)}
+                        value={confirmPassword}
                         name='confirmPassword'
                         type='password'
                         />
