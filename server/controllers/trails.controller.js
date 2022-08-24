@@ -1,4 +1,4 @@
-const trails =  require("../models/trailsInfo.model")
+const trails =  require("../models/trails.model")
 
 
 module.exports = {
@@ -23,7 +23,7 @@ module.exports = {
         trails.findOne({_id:req.params.id})
         .then((trail)=>{res.json(trail)})
         .catch((err)=>{console.log("error in getting this id")
-        res.status(400).json({message:"Something went wrong in finding this id"})})
+        res.status(400).json({message:"Something went wrong in finding this id",err})})
     },
 
     updateTrails:(req,res)=>{
