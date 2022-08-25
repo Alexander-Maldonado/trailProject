@@ -1,4 +1,6 @@
-const Users =  require("../models/user.model")
+const Users =  require("../models/user.model");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
 
@@ -9,17 +11,10 @@ module.exports = {
     })
     },
     
-    createUsers:(req,res)=>{
-        Users.create(req.body)
-        .then((newUser)=>{res.json(newUser)})
-        .catch((err)=>{console.log("error in creating a user", err)
-        res.status(400).json({message:"Something went wrong in creating user"})
-    })
-    },
-    
     getUserById:(req,res)=>{
+        console.log('looking for id: '+req.params.id);
         Users.findOne({_id:req.params.id})
-        .then((user)=>{res.json(user)})
+        .then((oneUser)=>res.json(oneUser))
         .catch((err)=>{console.log("error in getting this id")
         res.status(400).json({message:"Something went wrong in finding this id"},err)
         })
@@ -37,4 +32,69 @@ module.exports = {
         .then((deleteUser)=>res.json(deleteUser))
         .catch((err)=>res.status(400).json(err));
     },
+
+    registerUser: (req, res)=>{
+        const newUser = new Users(req.body);
+        console.log(newUser);
+
+        newUser.save()
+            .then(()=>{
+                // console.log('successful registration'),
+                res.json({
+                    message: 'Successfully Registered',
+                    user: newUser,
+                })
+                .catch(err=>res.status(400).json(err));
+            })
+    },
+
+    authUser: (req, res)=> {
+        Users.findOne({email: req.body.email})
+        .then((user)=>{
+            if(user === null){
+                res.status(400).json({message:'Invalid Login'})
+            } else{
+                bcrypt.compare(req.body.password, user.password)
+                    .then((isPasswordValid)=>{
+                        if(isPasswordValid === true) {
+                            console.log('Password Matches');
+                            res.cookie('usertoken', 
+                            jwt.sign({
+                                _id: user._id,
+                                username: user.username,
+                                email: user.email,
+                            },
+                            process.env.JWT_SECRET),
+                            {
+                                httpOnly: true,
+                                expires: new Date(Date.now() + 90000000000)
+                            })
+                            .json({
+                                message: 'Successful Log in',
+                                userLoggedIn: {
+                                    username: user.username,
+                                }
+                            })
+
+                        }else{
+                            res.status(400).json({message:"Invalid Login"})
+                        }
+                    })
+                    .catch((err)=>{
+                        res.status(400).json({message:"Invalid Login"})
+                    })
+            }
+        })
+        .catch((err)=>{
+            res.status(400).json({message:"Invalid Login"})
+        })
+    },
+
+
+    logout: (req, res)=>{
+        console.log('logging out!');
+        res.clearCookie('usertoken');
+        res.json({message:'Successful Log Out!'});
+    }
+
 }

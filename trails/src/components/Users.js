@@ -1,6 +1,21 @@
 import {Link} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Users = (props) =>{
+
+    const [trails, setTrails] = useState([]);
+
+    useEffect(()=>{
+        axios.get('http://localhost:8000/api/trails')
+        .then((res)=>{
+            console.log(res.data);
+            setTrails(res.data);
+        })
+        .catch((err)=>{
+            console.log(err);
+        });
+    }, [])
 
     return(
         <div className='container'>
@@ -10,7 +25,8 @@ const Users = (props) =>{
                 </header>
             </div>
             <div className='data'>
-                <table className="table">
+                {trails.map((trail, index)=>(
+                    <table className="table">
                     <thead className="thead">
                         <tr>
                         <th >Name</th>
@@ -20,13 +36,14 @@ const Users = (props) =>{
                     </thead>
                     <tbody>
                         <tr>
-                        <th ></th>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        {/* <th ></th> */}
+                        <td>{trail.User}</td>
+                        <td>trail.add</td>
+                        <td>{trail.numOfTrails}</td>
                         </tr>
                     </tbody>
                 </table>
+                ))}
             </div>
             <div className='links'>
                 <Link to={'/trails/user'}>View Your Trails</Link>

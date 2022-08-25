@@ -10,11 +10,13 @@ const Add= (props) =>{
     const [zipCode, setZipCode]= useState('');
     const [date, setDate]= useState('');
     const [complete, setComplete]= useState('');
+    // const [errors, setErrors]= useState('');
     const navigate = useNavigate();
 
     const submitForm = (e)=>{
         e.preventDefault();
-        axios.post(`http://localhost:8000/api/trails`,{trailUser,trailName,city,state,zipCode,date,complete})
+        axios.post(`http://localhost:8000/api/trails`,{trailUser,trailName,city,state,zipCode,date,complete},
+        { withCredentials:true})
         .then((res)=>{
             console.log(res);
             console.log(res.data);
@@ -26,9 +28,17 @@ const Add= (props) =>{
             setZipCode('');
             setDate('');
             setComplete('');
+            // if(res.data.errors){
+            //     // setErrors(res.data.errors);
+            // }else{
+            //     navigate('/trails/user')
+            // }
         })
         .catch(err=>{
-            console.log(err)
+            console.log(err.response.status);
+            if(err.response.status === 401){
+                navigate('/');
+            }
         })
     }
 

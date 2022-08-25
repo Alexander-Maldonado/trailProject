@@ -1,12 +1,41 @@
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const User = (props) =>{
+    const [users, setUsers] = useState({});
+    const navigate = useNavigate();
+
+    const logout=()=>{
+        axios.post('http://localhost:8000/api/trails/logout',{},{withCredentials:true})
+        .then((res)=>{
+        console.log(res.data)
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+    }
+
+    useEffect(()=>{
+        axios.get(`http://localhost:8000/api/trails/user/`,{
+            withCredentials:true
+        })
+        .then((res)=>{
+            console.log(res.data);
+            setUsers(res.data);
+        })
+        .catch((err)=>{
+            console.log('not authorized');
+            console.log(err);
+            navigate('/');
+        });
+    }, []);
 
     return(
         <div className='container'>
             <div>
                 <header className='title'>
-                    <h1>Welcome</h1>
+                    <h1>Welcome {users.firstName}</h1>
                 </header>
             </div>
                 <h2>Your Trails</h2>
@@ -32,6 +61,7 @@ const User = (props) =>{
             </div>
             <div className='links'>
                 <Link to={'/trails/users'}>View Other Users</Link>
+                <button onClick={logout}>Logout</button>
                 <Link to={'/trails/add'}>Add a Trail</Link>
             </div>
             <footer>

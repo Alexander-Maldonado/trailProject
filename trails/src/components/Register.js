@@ -9,11 +9,14 @@ const Register= (props) =>{
     const [password, setPassword]= useState('');
     const [confirmPassword, setConfirmPassword]= useState('');
     const [age, setAge]= useState('');
+    // const [errors, setErrors] =useState({});
     const navigate = useNavigate();
 
     const submitForm = (e)=>{
         e.preventDefault();
-        axios.post(`http://localhost:8000/api/trails/user`,{firstName,lastName,email,password,confirmPassword,age})
+        axios.post(`http://localhost:8000/api/trails/user/register`,{firstName,lastName,email,password,confirmPassword,age},{
+            withCredentials:true
+        })
         .then((res)=>{
             console.log(res);
             console.log(res.data);
@@ -26,7 +29,8 @@ const Register= (props) =>{
             setAge('');
         })
         .catch(err=>{
-            console.log(err)
+            console.log(err);
+            // setErrors(err.response.data.errors);
         })
     }
 
