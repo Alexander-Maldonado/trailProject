@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 mongoose
-    .connect("mongodb://localhost/trails", {
+    .connect("mongodb://127.0.0.1/trails", {
         useNewUrlParser:true,
         useUnifiedTopology:true,
     })

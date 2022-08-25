@@ -4,7 +4,7 @@ const TrailsSchema = new mongoose.Schema(
     {
         trailUser:{
             type:String,
-            required:[true,"A name is required"]
+            // required:[true,"A name is required"]
         },
 
         trailName:{

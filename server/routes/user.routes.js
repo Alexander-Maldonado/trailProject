@@ -1,10 +1,10 @@
-const user = require("../controllers/user.controller")
+const userCtrl = require("../controllers/user.controller")
 
 module.exports = (app) =>{
 
-    app.get("/api/trails/users", user.getUsers)
-    app.post("/api/trails/user", user.createUsers)
-    app.get("/api/trails/user/:id", user.getUserById)
-    app.put("/api/trails/user/:id", user.updateUserById)
-    app.delete("/api/trails/user/:id", user.deleteUser)
-}
+    app.get("/api/trails/users", userCtrl.getUsers);
+    app.post("/api/trails/user", userCtrl.createUsers);
+    app.get("/api/trails/user/:id", userCtrl.getUserById);
+    app.put("/api/trails/user/:id", userCtrl.updateUserById);
+    app.delete("/api/trails/user/:id", userCtrl.deleteUser);
+};
