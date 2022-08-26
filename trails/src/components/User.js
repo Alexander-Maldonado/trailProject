@@ -4,12 +4,15 @@ import axios from 'axios';
 
 const User = (props) =>{
     const [users, setUsers] = useState({});
+    const [trails, setTrails]= useState({});
+    const { id } = props;
     const navigate = useNavigate();
 
     const logout=()=>{
         axios.post('http://localhost:8000/api/trails/logout',{},{withCredentials:true})
         .then((res)=>{
-        console.log(res.data)
+        console.log(res.data);
+        navigate('/')
         })
         .catch((err)=>{
             console.log(err);
@@ -17,7 +20,22 @@ const User = (props) =>{
     }
 
     useEffect(()=>{
-        axios.get(`http://localhost:8000/api/trails/user/`,{
+        axios.get(`http://localhost:8000/api/trails/`+ id,{
+            withCredentials:true
+        })
+        .then((res)=>{
+            console.log(res.data);
+            setTrails(res.data);
+        })
+        .catch((err)=>{
+            console.log('not authorized');
+            console.log(err);
+            navigate('/');
+        })
+    })
+
+    useEffect(()=>{
+        axios.get(`http://localhost:8000/api/trails/user/` + id,{
             withCredentials:true
         })
         .then((res)=>{
@@ -51,7 +69,7 @@ const User = (props) =>{
                     </thead>
                     <tbody>
                         <tr>
-                        <th ></th>
+                        <th >{trails.trailName}</th>
                         <td></td>
                         <td></td>
                         <td></td>

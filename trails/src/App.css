@@ -84,3 +84,9 @@ table,tbody{
   display: flex;
   justify-content: space-between;
 }
+
+.error-msg{
+  color: red;
+  margin: 10px;
+  font-style: bold;
+}

@@ -11,14 +11,14 @@ module.exports = {
     })
     },
     
-    getUserById:(req,res)=>{
-        console.log('looking for id: '+req.params.id);
-        Users.findOne({_id:req.params.id})
-        .then((oneUser)=>res.json(oneUser))
-        .catch((err)=>{console.log("error in getting this id")
-        res.status(400).json({message:"Something went wrong in finding this id"},err)
-        })
-    },
+    // getUserById:(req,res)=>{
+    //     console.log('looking for id: '+req.params.id);
+    //     Users.findOne({_id:req.params.id})
+    //     .then((oneUser)=>res.json(oneUser))
+    //     .catch((err)=>{console.log("error in getting this id")
+    //     res.status(400).json({message:"Something went wrong in finding this id"},err)
+    //     })
+    // },
     
     updateUserById:(req,res)=>{
         Users.findOneAndUpdate({id:req.params.id}, req.body, {new:true, runValidators:true})
@@ -44,15 +44,14 @@ module.exports = {
                     message: 'Successfully Registered',
                     user: newUser,
                 })
-                .catch(err=>res.status(400).json(err));
-            })
+            }).catch((err)=>res.status(400).json(err))
     },
 
     authUser: (req, res)=> {
         Users.findOne({email: req.body.email})
         .then((user)=>{
             if(user === null){
-                res.status(400).json({message:'Invalid Login'})
+                res.status(400).json({message:'Please Provide All Credentials'})
             } else{
                 bcrypt.compare(req.body.password, user.password)
                     .then((isPasswordValid)=>{
@@ -61,8 +60,6 @@ module.exports = {
                             res.cookie('usertoken', 
                             jwt.sign({
                                 _id: user._id,
-                                username: user.username,
-                                email: user.email,
                             },
                             process.env.JWT_SECRET),
                             {
@@ -72,7 +69,7 @@ module.exports = {
                             .json({
                                 message: 'Successful Log in',
                                 userLoggedIn: {
-                                    username: user.username,
+                                    username: `${user.firstName} ${user.lastName}`,
                                 }
                             })
 
@@ -95,6 +92,14 @@ module.exports = {
         console.log('logging out!');
         res.clearCookie('usertoken');
         res.json({message:'Successful Log Out!'});
+    },
+
+    getLoggedInUser(req,res){
+        const decodedJWT= jwt.decode(req.cookies.usertoken, {complete:true});
+
+        Users.findById(decodedJWT.payload._id)
+        .then(user=>res.json(user))
+        .catch(err=>res.json(err));
     }
 
 }

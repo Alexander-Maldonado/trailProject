@@ -6,7 +6,7 @@ const LogIn = (props)=> {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-    const [error, setError] = useState('');
+    const [errors, setErrors] = useState('');
 
     const login = (e)=>{
         e.preventDefault();
@@ -20,11 +20,11 @@ const LogIn = (props)=> {
         .then((res)=>{
             console.log(res);
             console.log(res.data);
-            navigate('/trails/users');
+            navigate('/trails/user');
         })
         .catch((err)=>{
             console.log(err);
-            setError(err.response.data.message);
+            setErrors(err.response.data.message);
         })
     }
     
@@ -43,6 +43,7 @@ const LogIn = (props)=> {
                 </div>
                 <div className='login'>
                     <form className='info' onSubmit={login}>
+                    <p className='error-msg'>{errors?errors:""}</p>
                         <div className='input'>
                             <label>Email: </label>
                             <input

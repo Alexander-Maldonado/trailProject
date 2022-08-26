@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 
 const Add= (props) =>{
@@ -10,15 +10,32 @@ const Add= (props) =>{
     const [zipCode, setZipCode]= useState('');
     const [date, setDate]= useState('');
     const [complete, setComplete]= useState('');
+    const [users, setUsers]= useState({});
+    const { id } = props;
     // const [errors, setErrors]= useState('');
     const navigate = useNavigate();
+
+    useEffect(()=>{
+        axios.get(`http://localhost:8000/api/trails/user/` + id,{
+            withCredentials:true
+        })
+        .then((res)=>{
+            console.log(res.data);
+            setUsers(res.data);
+        })
+        .catch((err)=>{
+            console.log('not authorized');
+            console.log(err);
+            navigate('/');
+        });
+    }, []);
+
 
     const submitForm = (e)=>{
         e.preventDefault();
         axios.post(`http://localhost:8000/api/trails`,{trailUser,trailName,city,state,zipCode,date,complete},
         { withCredentials:true})
         .then((res)=>{
-            console.log(res);
             console.log(res.data);
             navigate('/trails/user');
             setTrailUser('');
@@ -56,7 +73,7 @@ const Add= (props) =>{
                         <input
                         hidden
                         onChange={(e)=>setTrailUser(e.target.value)}
-                        value={trailUser}
+                        value={users._id}
                         name='trailUser'
                         type='text'
                         />
@@ -108,12 +125,13 @@ const Add= (props) =>{
                     </div>
                     <div className="input">
                         <label>Completed? </label>
-                        <input
+                        <select 
                         onChange={(e)=>setComplete(e.target.value)}
                         value={complete}
-                        name='complete'
-                        type='radio'
-                        />
+                        name='complete'>
+                            <option value='Y'>Yes</option>
+                            <option value='N'>No</option>
+                        </select>
                     </div>
                     <button>Submit</button>
                 </form>

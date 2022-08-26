@@ -9,7 +9,7 @@ const Register= (props) =>{
     const [password, setPassword]= useState('');
     const [confirmPassword, setConfirmPassword]= useState('');
     const [age, setAge]= useState('');
-    // const [errors, setErrors] =useState({});
+    const [errors, setErrors] =useState({});
     const navigate = useNavigate();
 
     const submitForm = (e)=>{
@@ -18,7 +18,6 @@ const Register= (props) =>{
             withCredentials:true
         })
         .then((res)=>{
-            console.log(res);
             console.log(res.data);
             navigate('/');
             setFirstName('');
@@ -27,10 +26,11 @@ const Register= (props) =>{
             setPassword('');
             setConfirmPassword('');
             setAge('');
+            setErrors({});
         })
         .catch(err=>{
             console.log(err);
-            // setErrors(err.response.data.errors);
+            setErrors(err.response.data.errors);
         })
     }
 
@@ -43,9 +43,15 @@ const Register= (props) =>{
                 <Link to={'/'}>Return to Log In</Link>
             </div>
             <div className="register">
+                <p>(*) Fields Required</p>
                 <form className="info" onSubmit={submitForm}>
                     <div className="input">
-                        <label>First Name: </label>
+                        {
+                            errors.firstName?
+                                <span className='error-msg'>{errors.firstName.message}</span>
+                            :null
+                        }
+                        <label>* First Name: </label>
                         <input
                         onChange={(e)=>setFirstName(e.target.value)}
                         value={firstName}
@@ -54,7 +60,12 @@ const Register= (props) =>{
                         />
                     </div>
                     <div className="input">
-                        <label>Last Name: </label>
+                        {
+                            errors.lastName?
+                                <span className='error-msg'>{errors.lastName.message}</span>
+                            :null
+                        }
+                        <label>* Last Name: </label>
                         <input
                         onChange={(e)=>setLastName(e.target.value)}
                         value={lastName}
@@ -63,7 +74,12 @@ const Register= (props) =>{
                         />
                     </div>
                     <div className="input">
-                        <label>DOB: </label>
+                        {
+                            errors.age?
+                                <span className='error-msg'>{errors.age.message}</span>
+                            :null
+                        }
+                        <label>* DOB: </label>
                         <input
                         onChange={(e)=>setAge(e.target.value)}
                         value={age}
@@ -72,7 +88,12 @@ const Register= (props) =>{
                         />
                     </div>
                     <div className="input">
-                        <label>Email: </label>
+                        {
+                            errors.email?
+                                <span className='error-msg'>{errors.email.message}</span>
+                            :null
+                        }
+                        <label>* Email: </label>
                         <input
                         onChange={(e)=>setEmail(e.target.value)}
                         value={email}
@@ -81,7 +102,12 @@ const Register= (props) =>{
                         />
                     </div>
                     <div className="input">
-                        <label>Password: </label>
+                        {
+                            errors.password?
+                                <span className='error-msg'>{errors.password.message}</span>
+                            :null
+                        }
+                        <label>* Password: </label>
                         <input
                         onChange={(e)=>setPassword(e.target.value)}
                         value={password}
@@ -90,7 +116,7 @@ const Register= (props) =>{
                         />
                     </div>
                     <div className="input">
-                        <label>Confirm Password: </label>
+                        <label>* Confirm Password: </label>
                         <input
                         onChange={(e)=>setConfirmPassword(e.target.value)}
                         value={confirmPassword}

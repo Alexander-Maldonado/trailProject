@@ -1,10 +1,22 @@
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Users = (props) =>{
 
     const [trails, setTrails] = useState([]);
+    const navigate = useNavigate();
+
+    const logout=()=>{
+        axios.post('http://localhost:8000/api/trails/logout',{},{withCredentials:true})
+        .then((res)=>{
+        console.log(res.data);
+        navigate('/');
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+    }
 
     useEffect(()=>{
         axios.get('http://localhost:8000/api/trails')
@@ -22,6 +34,7 @@ const Users = (props) =>{
             <div>
                 <header className='title'>
                     <h1>Viewing All Users</h1>
+                    <p><button onClick={logout}>Logout</button></p>
                 </header>
             </div>
             <div className='data'>
